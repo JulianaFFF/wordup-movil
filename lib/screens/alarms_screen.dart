@@ -69,10 +69,12 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
+              Text(
                 '¿Desea eliminar esta alarma?',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.white, fontSize: 18),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: AppColors.white,
+                ),
               ),
               const SizedBox(height: 16),
               Row(
@@ -82,17 +84,28 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.white,
                       foregroundColor: AppColors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     onPressed: () => Navigator.of(ctx).pop(false),
-                    icon: const Icon(Icons.close, size: 16),
-                    label: const Text('Cancelar'),
+                    icon: const Icon(Icons.close, size: 20),
+                    label: Text('Cancelar', style: Theme.of(context).textTheme.labelLarge),
                   ),
                   const SizedBox(width: 12),
-                  DialogButton(
-                    label: 'Eliminar',
-                    icon: Icons.delete_outline,
-                    color: AppColors.error,
-                    onTap: () => Navigator.of(ctx).pop(true),
+                  FilledButton.icon(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.error,
+                      foregroundColor: AppColors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(ctx).pop(true),
+                    icon: const Icon(Icons.delete_outline, size: 20),
+                    label: Text('Eliminar', style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: AppColors.white,
+                    ),),
                   ),
                 ],
               ),
@@ -107,24 +120,35 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: wordupAppBar('Alarmas'),
+      appBar: wordupAppBar(context, 'Alarmas'),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(40, 24, 40, 24),
-            child: BigButton(
-              label: 'Crear Alarmas',
-              height: 80,
-              onTap: () => Navigator.of(context).push(
+            child: FilledButton(
+              onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const CreateAlarmScreen()),
+              ),
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.secondary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(28),
+                ),
+                minimumSize: const Size(312, 99),
+              ),
+              child: Text(
+                'Crear Alarmas',
+                style: Theme.of(
+                  context,
+                ).textTheme.headlineLarge?.copyWith(color: AppColors.white),
               ),
             ),
           ),
           Expanded(
             child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.only(top: 40, left: 16, right: 16, bottom: 16),
               itemCount: _alarms.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 12),
+              separatorBuilder: (_, _) => const SizedBox(height: 20),
               itemBuilder: (_, i) => _alarmTile(_alarms[i]),
             ),
           ),
@@ -135,50 +159,70 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
 
   Widget _alarmTile(_Alarm a) {
     const white = TextStyle(color: AppColors.white);
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(12),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minHeight: 157,
+        maxWidth: 380,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+      child: Card(
+        color: a.enabled
+            ? AppColors.primary
+            : AppColors.primary.withValues(alpha: 0.6),
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Row(
+                children: [
+                  Text(
+                    dayNames[a.day],
+                    style: Theme.of(
+                      context,
+                    ).textTheme.headlineLarge?.copyWith(color: AppColors.white),
+                  ),
+                  const Spacer(),
+                  Switch(
+                    value: a.enabled,
+                    onChanged: (v) => setState(() => a.enabled = v),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.edit_outlined,
+                      color: AppColors.secondary,
+                      size: 24,
+                    ),
+                    onPressed: () => _edit(a),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.delete_outline,
+                      color: AppColors.secondary,
+                      size: 24,
+                    ),
+                    onPressed: () => _delete(a),
+                  ),
+                ],
+              ),
               Text(
-                dayNames[a.day],
-                style: white.copyWith(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
-                ),
+                'Rango de horas:',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(color: AppColors.white),
               ),
-              const Spacer(),
-              Switch(
-                value: a.enabled,
-                onChanged: (v) => setState(() => a.enabled = v),
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.edit,
-                  color: AppColors.secondary,
-                  size: 20,
-                ),
-                onPressed: () => _edit(a),
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete, color: Colors.white54, size: 20),
-                onPressed: () => _delete(a),
+              const SizedBox(height: 8),
+              Text(
+                '${a.start.format(context)} - ${a.end.format(context)}',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: AppColors.white),
               ),
             ],
           ),
-          Text('Rango de horas:', style: white.copyWith(fontSize: 16)),
-          const SizedBox(height: 4),
-          Text(
-            '${a.start.format(context)} - ${a.end.format(context)}',
-            style: white.copyWith(fontSize: 12),
-          ),
-        ],
+        ),
       ),
     );
   }

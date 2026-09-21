@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
   static const primary = Color(0xFF6366B3);
@@ -11,8 +12,60 @@ class AppColors {
 }
 
 ThemeData buildTheme() {
+  final textTheme = TextTheme(
+    displayLarge: GoogleFonts.plusJakartaSans(
+      fontSize: 64,
+      fontWeight: FontWeight.w800,
+      height: 80 / 64,
+    ),
+
+    displayMedium: GoogleFonts.plusJakartaSans(
+      fontSize: 48,
+      fontWeight: FontWeight.w700,
+      height: 40 / 48,
+    ),
+
+    headlineLarge: GoogleFonts.plusJakartaSans(
+      fontSize: 32,
+      fontWeight: FontWeight.w600,
+      height: 35 / 32,
+    ),
+
+    titleLarge: GoogleFonts.plusJakartaSans(
+      fontSize: 24,
+      fontWeight: FontWeight.w500,
+      height: 30 / 24,
+    ),
+
+    bodyLarge: GoogleFonts.plusJakartaSans(
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+      height: 15 / 16,
+    ),
+
+    labelLarge: GoogleFonts.plusJakartaSans(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      height: 15 / 16,
+    ),
+
+    labelMedium: GoogleFonts.plusJakartaSans(
+      fontSize: 14,
+      fontWeight: FontWeight.w700,
+      height: 12 / 14,
+    ),
+
+    labelSmall: GoogleFonts.plusJakartaSans(
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+      height: 12 / 14,
+    ),
+  );
+
+
   return ThemeData(
     useMaterial3: true,
+    textTheme: textTheme,
     colorScheme: ColorScheme.fromSeed(
       seedColor: AppColors.primary,
       primary: AppColors.primary,
