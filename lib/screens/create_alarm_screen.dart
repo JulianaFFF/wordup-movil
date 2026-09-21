@@ -12,6 +12,28 @@ class _Block {
   final double endHour;
 }
 
+class _DashedLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = AppColors.primary
+      ..strokeWidth = 1;
+
+    const dashHeight = 4;
+    const dashSpace = 4;
+    double startY = 0;
+
+    while (startY < size.height) {
+      final end = (startY + dashHeight).clamp(0, size.height).toDouble();
+      canvas.drawLine(Offset(0, startY), Offset(0, end), paint);
+      startY += dashHeight + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(_DashedLinePainter old) => false;
+}
+
 /// Calendario semanal (01:00 - 16:00) donde se ven los bloques de alarmas.
 class CreateAlarmScreen extends StatefulWidget {
   const CreateAlarmScreen({super.key});
@@ -22,13 +44,13 @@ class CreateAlarmScreen extends StatefulWidget {
 
 class _CreateAlarmScreenState extends State<CreateAlarmScreen> {
   static const _firstHour = 1;
-  static const _lastHour = 16;
+  static const _lastHour = 24;
   static const _rowHeight = 36.0;
   static const _timeColWidth = 48.0;
   static const _headerHeight = 32.0;
   static const _days = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'];
 
-  final _blocks = [_Block(0, 9, 11), _Block(3, 10.5, 15), _Block(4, 15, 16)];
+  final _blocks = [_Block(0, 9, 11.5), _Block(3, 10.5, 18), _Block(4, 15, 20)];
 
   Future<void> _addBlock() async {
     final r = await showAlarmCardDialog(
@@ -59,21 +81,29 @@ class _CreateAlarmScreenState extends State<CreateAlarmScreen> {
               padding: const EdgeInsets.all(12),
               child: Container(
                 decoration: BoxDecoration(border: Border.all()),
-                child: SingleChildScrollView(
-                  child: LayoutBuilder(
-                    builder: (context, c) {
-                      final colW = (c.maxWidth - _timeColWidth) / 7;
-                      return SizedBox(
-                        height: _headerHeight + rows * _rowHeight,
-                        child: Stack(
-                          children: [
-                            _grid(colW, rows),
-                            for (final b in _blocks) _blockWidget(b, colW),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                child: LayoutBuilder(
+                  builder: (context, c) {
+                    final colW = (c.maxWidth - _timeColWidth) / 7;
+                    final rows = _lastHour - _firstHour + 1;
+                    return Column(
+                      children: [
+                        _gridHeader(colW),
+                        Expanded(
+                            child: SingleChildScrollView(
+                              child: SizedBox(
+                              height: rows * _rowHeight,
+                              child: Stack(
+                                children: [
+                                  _grid(colW, rows),
+                                  for (final b in _blocks) _blockWidget(b, colW),
+                                ],
+                              ),
+                            ),
+                            )
+                        )
+                      ]
+                    );
+                  },
                 ),
               ),
             ),
@@ -88,7 +118,7 @@ class _CreateAlarmScreenState extends State<CreateAlarmScreen> {
                   foregroundColor: AppColors.black,
                 ),
                 onPressed: _addBlock,
-                child: const Text('Agregar Bloque'),
+                child: Text('Agregar Bloque', style: Theme.of(context).textTheme.labelLarge,),
               ),
             ),
           ),
@@ -97,32 +127,34 @@ class _CreateAlarmScreenState extends State<CreateAlarmScreen> {
     );
   }
 
+
+  Widget _gridHeader(double colW) {
+    return Container(
+      height: _headerHeight,
+      color: AppColors.primary,
+      child: Row(
+        children: [
+          const SizedBox(width: _timeColWidth),
+          for (final d in _days)
+            SizedBox(
+              width: colW,
+              child: Center(
+                child: Text(
+                  d,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: AppColors.white,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget _grid(double colW, int rows) {
     return Column(
       children: [
-        Container(
-          height: _headerHeight,
-          color: AppColors.primary,
-          child: Row(
-            children: [
-              const SizedBox(width: _timeColWidth),
-              for (final d in _days)
-                SizedBox(
-                  width: colW,
-                  child: Center(
-                    child: Text(
-                      d,
-                      style: const TextStyle(
-                        color: AppColors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
         for (var h = _firstHour; h <= _lastHour; h++)
           SizedBox(
             height: _rowHeight,
@@ -134,21 +166,18 @@ class _CreateAlarmScreenState extends State<CreateAlarmScreen> {
                   color: AppColors.primary,
                   child: Text(
                     '${h.toString().padLeft(2, '0')}:00',
-                    style: const TextStyle(
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
                       color: AppColors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
                 for (var d = 0; d < 7; d++)
-                  Container(
+                  SizedBox(
                     width: colW,
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        left: BorderSide(color: Color(0x556366B3)),
-                        bottom: BorderSide(color: Color(0x226366B3)),
-                      ),
+                    height: _rowHeight,
+                    child: CustomPaint(
+                      painter: _DashedLinePainter(),
+                      size: Size(colW, _rowHeight),
                     ),
                   ),
               ],
@@ -167,7 +196,25 @@ class _CreateAlarmScreenState extends State<CreateAlarmScreen> {
       top: top,
       height: height,
       child: GestureDetector(
-        onTap: () => setState(() => _blocks.remove(b)),
+        onTap: () async {
+          final r = await showAlarmCardDialog(
+            context,
+            initialDays: {b.day},
+            start: TimeOfDay(hour: b.startHour.floor(), minute: ((b.startHour % 1) * 60).round()),
+            end: TimeOfDay(hour: b.endHour.floor(), minute: ((b.endHour % 1) * 60).round()),
+            confirmLabel: 'Guardar',
+            confirmIcon: Icons.check,
+            singleDay: true,
+          );
+          if (r == null) return;
+          final s = r.start.hour + r.start.minute / 60;
+          final e = r.end.hour + r.end.minute / 60;
+          if (e <= s) return;
+          setState(() {
+            _blocks.remove(b);
+            _blocks.add(_Block(r.days.first, s, e));
+          });
+        },
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.secondary,
@@ -175,9 +222,9 @@ class _CreateAlarmScreenState extends State<CreateAlarmScreen> {
           ),
           alignment: Alignment.center,
           child: const CircleAvatar(
-            radius: 9,
+            radius: 16,
             backgroundColor: AppColors.white,
-            child: Icon(Icons.edit, size: 11, color: AppColors.highlight),
+            child: Icon(Icons.edit_outlined, size: 20, color: AppColors.highlight),
           ),
         ),
       ),

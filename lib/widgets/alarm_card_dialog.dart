@@ -89,7 +89,7 @@ class _AlarmCardState extends State<_AlarmCard> {
             primary: AppColors.white,
             onPrimary: AppColors.secondary,
             surface: AppColors.secondary,
-            onSurface: AppColors.white,
+            onSurface: AppColors.black,
             surfaceContainerHigh: AppColors.secondary,
             secondaryContainer: AppColors.white,
             onSecondaryContainer: AppColors.black,

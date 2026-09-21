@@ -6,8 +6,6 @@ import 'alarms_screen.dart';
 import 'home_screen.dart';
 import 'settings_screen.dart';
 
-/// Contiene la barra de navegación inferior. Cada pestaña tiene su propio
-/// Navigator para que la barra siga visible al entrar a Flashcard, etc.
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
 
@@ -47,10 +45,8 @@ class _MainShellState extends State<MainShell> {
             backgroundColor: AppColors.primary,
             indicatorColor: AppColors.secondary,
             labelTextStyle: WidgetStateProperty.all(
-              const TextStyle(
+              Theme.of(context).textTheme.labelMedium?.copyWith(
                 color: AppColors.white,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
               ),
             ),
             iconTheme: WidgetStateProperty.all(
@@ -60,6 +56,7 @@ class _MainShellState extends State<MainShell> {
           child: NavigationBar(
             selectedIndex: _index,
             onDestinationSelected: (i) {
+              if (i == 2) return;
               if (i == _index) {
                 _keys[i].currentState!.popUntil((r) => r.isFirst);
               }
