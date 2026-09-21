@@ -14,12 +14,16 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         toolbarHeight: 64,
         centerTitle: false,
-        title: const Text('Inglés'),
-        actions: const [
-          Icon(Icons.local_fire_department_outlined, size: 18),
-          SizedBox(width: 4),
-          Text('12', style: TextStyle(color: AppColors.white, fontSize: 12)),
-          SizedBox(width: 16),
+        title: Text('Inglés', style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          color: AppColors.white,
+        )),
+        actions: [
+          const Icon(Icons.local_fire_department_outlined, size: 30),
+          const SizedBox(width: 4),
+          Text('12', style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            color: AppColors.white,
+          )),
+          const SizedBox(width: 16),
         ],
       ),
       body: Padding(
@@ -27,8 +31,8 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            BigButton(label: 'Palabras\nRecomendadas', onTap: () {}),
-            BigButton(label: 'Iniciar Actividad', onTap: onStartActivity),
+            BigButton(label: 'Palabras\nRecomendadas', onTap: () {}, height: 250, width: 350,),
+            BigButton(label: 'Iniciar Actividad', onTap: onStartActivity, height: 250, width: 350,),
           ],
         ),
       ),
