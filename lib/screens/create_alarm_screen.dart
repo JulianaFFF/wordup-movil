@@ -71,7 +71,6 @@ class _CreateAlarmScreenState extends State<CreateAlarmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final rows = _lastHour - _firstHour + 1;
     return Scaffold(
       appBar: wordupAppBar(context, 'Crear alarmas', back: true),
       body: Column(

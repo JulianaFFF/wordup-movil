@@ -158,7 +158,6 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
   }
 
   Widget _alarmTile(_Alarm a) {
-    const white = TextStyle(color: AppColors.white);
     return ConstrainedBox(
       constraints: const BoxConstraints(
         minHeight: 157,
