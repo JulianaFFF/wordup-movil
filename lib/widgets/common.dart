@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import '../theme.dart';
 
 /// Barra superior morada usada en todas las pantallas.
-AppBar wordupAppBar(String title, {bool back = false}) {
+AppBar wordupAppBar(BuildContext context, String title, {bool back = false}) {
   return AppBar(
-    title: Text(title),
+    title: Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(
+      color: AppColors.white,
+    ),),
     automaticallyImplyLeading: back,
     toolbarHeight: 64,
   );
@@ -18,34 +20,35 @@ class BigButton extends StatelessWidget {
     required this.label,
     required this.onTap,
     this.height = 125,
-    this.fontSize = 22,
+    this.width = double.infinity,
+    this.textStyle,
   });
 
   final String label;
   final VoidCallback onTap;
   final double height;
-  final double fontSize;
+  final double width;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return Card(
       color: AppColors.secondary,
       elevation: 4,
-      borderRadius: BorderRadius.circular(12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: onTap,
         child: Container(
           height: height,
+          width: width,
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
             label,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: textStyle ?? Theme.of(context).textTheme.headlineLarge?.copyWith(
               color: AppColors.white,
-              fontSize: fontSize,
-              fontWeight: FontWeight.w500,
             ),
           ),
         ),
@@ -79,7 +82,9 @@ Future<void> showFeedbackDialog(
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.white, fontSize: 18),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: AppColors.white,
+              ),
             ),
             const SizedBox(height: 14),
             FilledButton(
@@ -90,7 +95,9 @@ Future<void> showFeedbackDialog(
               },
               child: Text(
                 buttonLabel,
-                style: TextStyle(color: buttonTextColor),
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: buttonTextColor,
+                ),
               ),
             ),
           ],

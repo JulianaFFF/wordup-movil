@@ -52,7 +52,7 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
   Widget build(BuildContext context) {
     final (word, es, en) = _words[_i];
     return Scaffold(
-      appBar: wordupAppBar('Flashcard', back: true),
+      appBar: wordupAppBar(context, 'Flashcard'),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -69,14 +69,14 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
+                              Text(
                                 'Significado/Meaning:',
-                                style: TextStyle(fontSize: 18),
+                                style: Theme.of(context).textTheme.titleLarge,
                               ),
                               const SizedBox(height: 16),
-                              Text(es, textAlign: TextAlign.center),
+                              Text(es, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge,),
                               const SizedBox(height: 16),
-                              Text(en, textAlign: TextAlign.center),
+                              Text(en, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge,),
                             ],
                           ),
                         )
@@ -86,10 +86,8 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
                           child: Center(
                             child: Text(
                               word,
-                              style: const TextStyle(
+                              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                                 color: AppColors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
@@ -128,7 +126,8 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
   Widget _card({Key? key, required Color color, required Widget child}) {
     return Container(
       key: key,
-      width: double.infinity,
+      height: 392,
+      width: 368,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: color,
@@ -157,7 +156,9 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
         child: Text(
           label,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            color: fg,
+          ),
         ),
       ),
     );

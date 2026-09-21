@@ -30,62 +30,66 @@ class _PronunciationScreenState extends State<PronunciationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: wordupAppBar('Pronunciación', back: true),
+      appBar: wordupAppBar(context, 'Pronunciación'),
       body: SizedBox(
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              const Spacer(),
-              const Text(
+              const Spacer(flex: 3),
+              Text(
                 'Defenestration',
-                style: TextStyle(
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                   color: AppColors.primary,
-                  fontSize: 28,
-                  fontWeight: FontWeight.w600,
                 ),
               ),
-              const Text(
+              Text(
                 "/diː.fen.ɪˈstreɪ.ʃən/",
-                style: TextStyle(fontSize: 12),
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 24),
               IconButton(
-                iconSize: 64,
+                iconSize: 130,
                 color: AppColors.secondary,
-                icon: const Icon(Icons.volume_up),
+                icon: const Icon(Icons.volume_up_outlined),
                 onPressed: () {},
               ),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 'Significado/meaning:',
-                style: TextStyle(fontSize: 16),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 12),
-              const Text(
-                'Acto de arrojar a una persona o cosa por la ventana',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11),
+              SizedBox(
+                width: 325,
+                child: Text(
+                  'Acto de arrojar a una persona o cosa por la ventana',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
               ),
               const SizedBox(height: 12),
-              const Text(
-                'The act of throwing someone or something out of a window',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11),
+              SizedBox(
+                width: 325,
+                child: Text(
+                  'The act of throwing someone or something out of a window',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
               ),
               const Spacer(flex: 2),
               GestureDetector(
                 onTap: _toggleMic,
                 child: CircleAvatar(
-                  radius: 30,
+                  radius: 55,
                   backgroundColor: _recording
-                      ? AppColors.error
+                      ? AppColors.primary
                       : AppColors.secondary,
                   child: Icon(
-                    _recording ? Icons.stop : Icons.mic,
+                    _recording ? Icons.mic : Icons.mic,
                     color: AppColors.white,
-                    size: 34,
+                    size: 100,
                   ),
                 ),
               ),

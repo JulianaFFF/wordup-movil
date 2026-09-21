@@ -40,51 +40,51 @@ class MeaningScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: wordupAppBar('Significado', back: true),
+      appBar: wordupAppBar(context, 'Significado'),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 40),
-            const Text(
+            Text(
               'Defenestration',
-              style: TextStyle(
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                 color: AppColors.primary,
-                fontSize: 28,
-                fontWeight: FontWeight.w600,
               ),
             ),
-            const Text(
+            const SizedBox(height: 8),
+            Text(
               'Choose the right meaning',
-              style: TextStyle(fontSize: 12),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
-            const Spacer(),
+            const SizedBox(height: 65),
             for (var i = 0; i < _options.length; i++) ...[
               InkWell(
                 onTap: () => _select(context, i),
                 child: Row(
                   children: [
                     CircleAvatar(
-                      radius: 16,
+                      radius: 20,
                       backgroundColor: AppColors.highlight,
                       child: Text(
                         String.fromCharCode(65 + i),
-                        style: const TextStyle(color: AppColors.primary),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: AppColors.primary,
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 14),
                     Expanded(
                       child: Text(
                         _options[i],
-                        style: const TextStyle(fontSize: 12),
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 60),
             ],
-            const Spacer(),
           ],
         ),
       ),

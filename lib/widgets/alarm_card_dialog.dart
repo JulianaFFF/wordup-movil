@@ -82,6 +82,25 @@ class _AlarmCardState extends State<_AlarmCard> {
     final t = await showTimePicker(
       context: context,
       initialTime: isStart ? _start : _end,
+      initialEntryMode: TimePickerEntryMode.input,
+      builder: (context, child) => Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: AppColors.white,
+            onPrimary: AppColors.secondary,
+            surface: AppColors.secondary,
+            onSurface: AppColors.white,
+            surfaceContainerHigh: AppColors.secondary,
+            secondaryContainer: AppColors.white,
+            onSecondaryContainer: AppColors.black,
+            onSurfaceVariant: AppColors.black,
+          ),
+        ),
+        child: MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        ),
+      ),
     );
     if (t == null) return;
     setState(() => isStart ? _start = t : _end = t);
@@ -89,7 +108,9 @@ class _AlarmCardState extends State<_AlarmCard> {
 
   @override
   Widget build(BuildContext context) {
-    const label = TextStyle(color: AppColors.primary, fontSize: 22);
+    final label = Theme.of(context).textTheme.titleLarge?.copyWith(
+      color: AppColors.primary,
+    );
     return Dialog(
       backgroundColor: AppColors.soft,
       elevation: 12,
@@ -102,7 +123,7 @@ class _AlarmCardState extends State<_AlarmCard> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Días:', style: label),
+            Text('Días:', style: label),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -134,7 +155,7 @@ class _AlarmCardState extends State<_AlarmCard> {
               ],
             ),
             const SizedBox(height: 20),
-            const Text('Rango de Horas:', style: label),
+            Text('Rango de Horas:', style: label),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -148,7 +169,7 @@ class _AlarmCardState extends State<_AlarmCard> {
             const SizedBox(height: 20),
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: FittedBox(
                     alignment: Alignment.centerLeft,
                     fit: BoxFit.scaleDown,
@@ -158,7 +179,7 @@ class _AlarmCardState extends State<_AlarmCard> {
                 _counterButton(Icons.add, () => setState(() => _count++)),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text('$_count', style: const TextStyle(fontSize: 24)),
+                  child: Text('$_count', style: Theme.of(context).textTheme.titleLarge),
                 ),
                 _counterButton(Icons.remove, () {
                   if (_count > 1) setState(() => _count--);
@@ -226,10 +247,7 @@ class _AlarmCardState extends State<_AlarmCard> {
       child: InputDecorator(
         decoration: InputDecoration(
           labelText: title,
-          labelStyle: const TextStyle(
-            color: AppColors.black,
-            fontWeight: FontWeight.bold,
-          ),
+          labelStyle: Theme.of(context).textTheme.labelMedium,
           floatingLabelBehavior: FloatingLabelBehavior.always,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 14,
@@ -246,13 +264,13 @@ class _AlarmCardState extends State<_AlarmCard> {
           suffixIcon: const Padding(
             padding: EdgeInsets.all(10),
             child: CircleAvatar(
-              radius: 10,
+              radius: 12,
               backgroundColor: AppColors.secondary,
-              child: Icon(Icons.star, size: 13, color: AppColors.white),
+              child: Icon(Icons.star, size: 20, color: AppColors.white),
             ),
           ),
         ),
-        child: Text(_fmt(t), style: const TextStyle(fontSize: 16)),
+        child: Text(_fmt(t), style: Theme.of(context).textTheme.labelSmall),
       ),
     );
   }

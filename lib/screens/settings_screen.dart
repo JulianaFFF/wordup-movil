@@ -8,6 +8,6 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: wordupAppBar('Ajustes'));
+    return Scaffold(appBar: wordupAppBar(context, 'Ajustes'));
   }
 }

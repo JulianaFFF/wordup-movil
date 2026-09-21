@@ -24,46 +24,48 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
   }
 
   Widget _activity(String name, Widget screen) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        BigButton(
-          label: name,
-          height: 100,
-          fontSize: 18,
-          onTap: () => _open(name, screen),
-        ),
-        if (_done.contains(name))
-          Positioned(
-            top: -8,
-            right: -8,
-            child: Container(
-              padding: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                color: AppColors.highlight,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.check, color: AppColors.white, size: 24),
+    return Center(
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          BigButton(
+            label: name,
+            height: 180,
+            width: 281,
+            onTap: () => _open(name, screen),
+            textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: AppColors.white,
             ),
           ),
-      ],
+          if (_done.contains(name))
+            Positioned(
+              top: -8,
+              right: -8,
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: AppColors.highlight,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: const Icon(Icons.check, color: AppColors.white, size: 24),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: wordupAppBar('Actividades', back: true),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _activity('Flashcard', const FlashcardScreen()),
-            _activity('Significado', const MeaningScreen()),
-            _activity('Pronunciación', const PronunciationScreen()),
-          ],
-        ),
+      appBar: wordupAppBar(context, 'Actividades'),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _activity('Flashcard', const FlashcardScreen()),
+          _activity('Significado', const MeaningScreen()),
+          _activity('Pronunciación', const PronunciationScreen()),
+        ],
       ),
     );
   }
