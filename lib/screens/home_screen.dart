@@ -30,9 +30,10 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            BigButton(label: 'Palabras\nRecomendadas', onTap: () {}, height: 250, width: 350,),
-            BigButton(label: 'Iniciar Actividad', onTap: onStartActivity, height: 250, width: 350,),
+            BigButton(label: 'Palabras\nRecomendadas', onTap: () {}, height: 250),
+            BigButton(label: 'Iniciar Actividad', onTap: onStartActivity, height: 250),
           ],
         ),
       ),
